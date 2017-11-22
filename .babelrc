@@ -1,0 +1,11 @@
+{
+  "presets": [
+    ["vue-app", {
+      "useBuiltIns": true
+    }],
+    ["env", { 
+      "modules": "commonjs",
+      "useBuiltIns": true
+    }]
+  ]
+}
