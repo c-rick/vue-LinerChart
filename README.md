@@ -17,4 +17,4 @@ like this:
 
   <LineChart :step="100" :chartData="chartData"  />
 ```
- ![image](https://github.com/2016caicai/vue-LinerChart/example.jpg)
+ ![image](https://github.com/2016caicai/vue-LinerChart/raw/master/example.jpg)
