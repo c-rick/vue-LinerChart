@@ -126,8 +126,6 @@ export default {
       const datasets = this.chartData
 
       datasets.map((item) => {
-        console.log(item)
-        const storkCol = item.storkColor
         this.updateAxis(item)
         this.updateCircle(item)
         // 画线
@@ -135,7 +133,7 @@ export default {
           .select('.prenoms .lines')
           .append('path')
         lines.classed('liner', true)
-          .style('stroke', storkCol)
+          .style('stroke', item.storkColor)
           .attr('d', this.lineGenerator(item.data))
 
         // 添加动画
@@ -156,13 +154,13 @@ export default {
           .append('circle')
           .attr('cx', 0)
           .attr('cy', 0)
-          .attr('r', 5)
+          .attr('r', 4)
           .attr('fill', item.storkColor)
         newCircle
           .append('circle')
           .attr('cx', 0)
           .attr('cy', 0)
-          .attr('r', 3)
+          .attr('r', 2)
           .attr('fill', 'white')
       })
     },
@@ -173,23 +171,21 @@ export default {
 
       // 添加动画
       const pathLength = lines.node().getTotalLength()
-      if (lines.attr('hidden')) {
-        // label
-        colorSpan.classed('hidden', null)
+      const hiddenAttr = lines.attr('hidden')
+      // label
+      colorSpan.classed('hidden', hiddenAttr ? null : true)
+      // points
+      circle.attr('visibility', hiddenAttr ? '' : 'hidden')
+      lines.attr('hidden', hiddenAttr ? null : true).style('stroke-dasharray', pathLength)
+      if (hiddenAttr) {
         // line
-        lines.attr('hidden', null).style('stroke-dasharray', pathLength).transition().duration(750)
-          .styleTween('stroke-dashoffset', () => d3.interpolateNumber(pathLength, 0))
+        lines.transition().duration(950).styleTween('stroke-dashoffset', () => d3.interpolateNumber(pathLength, 0))
         // points
-        circle.attr('visibility', '')
         this.hiddenIndex = this.hiddenIndex.filter((d) => d !== index)
       } else {
-        // label
-        colorSpan.classed('hidden', true)
         // line
-        lines.attr('hidden', true).style('stroke-dasharray', pathLength).transition().duration(750)
-          .styleTween('stroke-dashoffset', () => d3.interpolateNumber(0, pathLength))
+        lines.transition().duration(950).styleTween('stroke-dashoffset', () => d3.interpolateNumber(0, pathLength))
         // points
-        circle.attr('visibility', 'hidden')
         this.hiddenIndex.push(index)
       }
     },
@@ -240,7 +236,7 @@ export default {
     }
   },
   computed: {
-    lineGenerator (data) {
+    lineGenerator () {
       const padding = this.padding
       const xStep = (this.CWidth - padding * 2) / this.xMax
       const yStep = (this.CHeight - padding * 2) / this.yMax
